@@ -9,11 +9,6 @@ import java.net.*;
 import java.io.*;
 import java.util.HashMap;
 
-import org.json.*;
-import edu.escuelaing.arep.services.Service;
-
-
-
 public class HttpServer {
 
     public static void main(String[] args) throws IOException {
@@ -59,16 +54,14 @@ public class HttpServer {
                 }
             }
 
-            if (request.startsWith("/apps/")) {
-                outputLine = startService(request.substring(5));
-            }
-            else if(!title.equals("")){
+
+            if(!title.equals("")){
                 String response = HttpConnectionExample.movieRequest(title, "http://www.omdbapi.com/?t="+ title +"&apikey=1ad2f274");
                 outputLine ="HTTP/1.1 200 OK\r\n"
                         + "Content-Type: text/html\r\n"
                         + "\r\n"
                         + "<br>"
-                        + "<table border=\" 1 \"> \n " + inTable(response)+
+                        + "<table border=\" 1 \"> \n " +
 
                         "    </table>";
             }else {
@@ -85,38 +78,21 @@ public class HttpServer {
         serverSocket.close();
     }
 
-    private static String startService(String serviceName) {
-        Service ser = Service.getInstance();
-        try {
-            String type = serviceName.split("\\.")[1];
-            String header = ser.getHeader(type, "200 OK");
-            String body = ser.getResponse("src/main/resources/" + serviceName);
-            return header + body;
-        }
-        catch (RuntimeException e){
-            String header = ser.getHeader("html", "404 Not Found");
-            String body = ser.getResponse("src/main/resources/error.html");
-            return header + body;
-        }
-    }
 
-    /**
-     * Entrega el index de la página principal
-     * @return Index en formato de String del HTML del inicio de la Página
-     */
+
     private static String getIndexResponse(){
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
-                "    <title>Buscador de peliculas</title>\n" +
+                "    <title>Peliculas</title>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "</head>\n" +
                 "<body>\n" +
                 "<h1>Buscar una pelicula</h1>\n" +
                 "<form action=\"/hello\">\n" +
-                "    <label for=\"name\">Titulo de la pelicula a buscar:</label><br>\n" +
-                "    <input type=\"text\" id=\"name\" name=\"name\" value=\"Batman\"><br><br>\n" +
+                "    <label for=\"name\">Titulo de la pelicula:</label><br>\n" +
+                "    <input type=\"text\" id=\"name\" name=\"name\" value=\"Busque su pelicula\"><br><br>\n" +
                 "    <input type=\"button\" value=\"Submit\" onclick=\"loadGetMsg()\">\n" +
                 "</form>\n" +
                 "<div id=\"getrespmsg\"></div>\n" +
